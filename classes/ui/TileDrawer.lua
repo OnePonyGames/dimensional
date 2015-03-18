@@ -19,7 +19,7 @@ end
 function TileDrawer:draw()
     for i,row in ipairs(self.level.map) do
         for j,e in ipairs(row) do
-            love.graphics.draw(self.tiles[e], (i-1) * self.tileSize, (j-1) * self.tileSize)
+            love.graphics.draw(self.tiles[e], (j-1) * self.tileSize, (i-1) * self.tileSize)
         end
     end
 end

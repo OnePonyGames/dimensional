@@ -8,6 +8,7 @@ local GameManager = require "classes.logic.GameManager"
 
 
 function love.load()
+    love.keyboard.setKeyRepeat(true)
     GameManager:init()
 end
 

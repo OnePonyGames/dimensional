@@ -5,6 +5,7 @@ local Player = Class {}
 
 function Player:init(sprite)
     self.sprite = sprite
+    self.id = 1
 end
 
 function Player:setLocation(x, y)
@@ -17,23 +18,22 @@ function Player:setTileSize(tileSize)
 end
 
 function Player:draw()
-    love.graphics.draw(self.sprite, self.x * self.tileSize, self.y * self.tileSize)
+    love.graphics.draw(self.sprite, (self.x-1) * self.tileSize, (self.y-1) * self.tileSize)
 end
 
-function Player:moveUp()
-    self.y = self.y - 1
+function Player:moveBy(xoff, yoff)
+    self.x = self.x + xoff
+    self.y = self.y + yoff
 end
 
-function Player:moveDown()
-    self.y = self.y + 1
-end
-
-function Player:moveLeft()
-    self.x = self.x - 1
-end
-
-function Player:moveRight()
-    self.x = self.x + 1
+function Player:clone()
+    local newPlayer = Player()
+    newPlayer.sprite = self.sprite
+    newPlayer.x = self.x
+    newPlayer.y = self.y
+    newPlayer.tileSize = self.tileSize
+    newPlayer.id = self.id + 1
+    return newPlayer
 end
 
 
