@@ -11,6 +11,7 @@ function LevelManager:init(level)
     self.dimensions = level.dimensions
     self.passable = level.passable
     self.script = level.script
+    self.goal = level.goal
 end
 
 function LevelManager:fireAction(location, direction)
@@ -18,8 +19,14 @@ function LevelManager:fireAction(location, direction)
 
     for i, action in ipairs(self.actions) do
         if(action.location.x == activatorLocation.x and action.location.y == activatorLocation.y) then
-            action:call(activatorLocation)
+            action.call(activatorLocation)
         end
+    end
+end
+
+function LevelManager:checkWinCondition(location)
+    if(location.x == self.goal.x and location.y == self.goal.y) then
+        Debug.log("YOU WON!")
     end
 end
 
@@ -41,7 +48,16 @@ function LevelManager:getActivatorLocation(location, direction)
 end
 
 function LevelManager:isPassable(x, y)
-    return self.passable[y][x] == 1
+    if(self.passable[y][x] == 1) then
+        return true
+    elseif(self.passable[y][x] == 2) then
+        return self.script.isDoorOpen()
+    end
+    return false
+end
+
+function LevelManager:reset()
+    self.script:reset()
 end
 
 return LevelManager

@@ -1,8 +1,14 @@
 
 local Script = require "classes.logic.Script"
+local Timer = require "libs.hump.timer"
+
 
 local Lvl1Script = Class {}
 Lvl1Script:include(Script, Lvl1Script)
+
+-- locations of interest
+local lever1 = {x = 6, y = 4}
+local lever2 = {x = 20, y = 4 }
 
 -- level map initialization
 local level = {}
@@ -11,17 +17,48 @@ local level = {}
 local levers = {}
 
 
+function Lvl1Script:init()
+    levers[lever1] = false
+    levers[lever2] = false
+end
+
+function Lvl1Script:reset()
+    setLever(lever1, false, 13)
+    setLever(lever2, false, 13)
+end
+
 -- script call functions
-function Lvl1Script:pullLever(location)
-    levers[location] = true
-    level.map[location.y][location.x] = 14
+function setLever(location, state, spriteId)
+    for lever, stt in pairs(levers) do
+        if(lever.x == location.x and lever.y == location.y) then
+            levers[lever] = state
+            level.map[location.y][location.x] = spriteId
+        end
+    end
+end
+
+function pullLever(location)
+    setLever(location, true, 14)
+end
+
+function resetLever(location)
+    setLever(location, false, 13)
+end
+
+function Lvl1Script:isDoorOpen()
+    for i, lever in pairs(levers) do
+        if(lever == false) then
+            return false
+        end
+    end
+    return true
 end
 
 
 -- level map and scripts
 level = {
     map = {
-        {7, 4, 4, 4, 4, 2, 2, 4, 2, 4, 4, 4, 11, 2, 4, 2, 4, 2, 4, 2, 4, 2, 4, 4, 6 }, -- row 0
+        {7, 4, 4, 4, 4, 2, 2, 4, 2, 4, 4, 4, 11, 2, 4, 2, 4, 2, 4, 2, 4, 2, 4, 4, 6 },
         {7, 3, 3, 3, 3, 5, 3, 5, 3, 3, 3, 5, 12, 5, 3, 3, 3, 3, 3, 5, 5, 3, 3, 3, 6 },
         {7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 6 },
         {7, 1, 1, 1, 1, 13, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 13, 1, 1, 1, 1, 6 },
@@ -43,17 +80,21 @@ level = {
     },
     actions = {
         {
-            location = {x = 20, y = 4},
-            call = Lvl1Script.pullLever,
+            location = lever1,
+            call = pullLever,
         },
         {
-            location = {x = 6, y = 4},
-            call = Lvl1Script.pullLever,
+            location = lever2,
+            call = pullLever,
         },
     },
     spawn = {
         x = 13,
         y = 3
+    },
+    goal = {
+        x = 13,
+        y = 2,
     },
     dimensions = {
         w = 25,
@@ -61,7 +102,7 @@ level = {
     },
     passable = {
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
-        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, -- two is the exit
         {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
         {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0 },
         {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },

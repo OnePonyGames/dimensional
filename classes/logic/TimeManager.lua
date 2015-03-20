@@ -38,6 +38,7 @@ function TimeManager:timeShift(entity, timeOffset)
 end
 
 function TimeManager:playFromTheBeginning()
+    self.level:reset()
     self.entities = {}
 
     for time, actions in pairs(self.timedActions) do
@@ -79,6 +80,7 @@ function TimeManager:resolveAction(action)
         self.entities[action.e] = nil
     elseif(action.action == TimeManager.Move) then
         action.e:moveBy(action.x, action.y)
+        self.level:checkWinCondition(action.e:getLocation())
     elseif(action.action == TimeManager.Activate) then
         self.level:fireAction(action.e:getLocation(), action.e:getDirection())
     end
