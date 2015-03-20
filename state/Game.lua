@@ -1,6 +1,7 @@
 local State = require "state.State"
 local TileDrawer = require "classes.ui.TileDrawer"
 local Chronometer = require "classes.ui.Chronometer"
+local Timer = require "libs.hump.timer"
 
 local TimeManager = require "classes.logic.TimeManager"
 
@@ -38,7 +39,12 @@ end
 
 function Game:update(dt)
     self.timeManager:update(dt)
+
     Debug.update(dt)
+
+    if(self.timeManager:isRunning()) then
+        Timer.update(dt)
+    end
 end
 
 function Game:keyreleased(key, code)

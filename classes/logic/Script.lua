@@ -8,6 +8,10 @@ function Script:isDoorOpen()
     return false
 end
 
+function Script:reset()
+    -- do nothing
+end
+
 
 return Script
 

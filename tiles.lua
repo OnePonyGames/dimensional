@@ -15,6 +15,16 @@ local Tiles = {
     "gfx/tiles/door_bottom.png",            -- 12
     "gfx/tiles/floor_lever_up.png",         -- 13
     "gfx/tiles/floor_lever_down.png",       -- 14
+    "gfx/tiles/wall_segment_v.png",         -- 15
+    "gfx/tiles/wall_stub_down.png",         -- 16
+    "gfx/tiles/wall_stub_down_left.png",    -- 17
+    "gfx/tiles/wall_stub_down_right.png",   -- 18
+    "gfx/tiles/wall_segment_h.png",         -- 19
+    "gfx/tiles/wall_stub_right.png",        -- 20
+    "gfx/tiles/wall_stub_left.png",         -- 21
+    "gfx/tiles/wall_empty.png",             -- 22
+    "gfx/tiles/wall_stub_up_left.png",      -- 23
+    "gfx/tiles/wall_stub_up_right.png",     -- 24
 }
 
 
