@@ -4,10 +4,24 @@ local Script = require "classes.logic.Script"
 local Lvl1Script = Class {}
 Lvl1Script:include(Script, Lvl1Script)
 
+-- level map initialization
+local level = {}
 
-local level = {
+-- variables used in call functions
+local levers = {}
+
+
+-- script call functions
+function Lvl1Script:pullLever(location)
+    levers[location] = true
+    level.map[location.y][location.x] = 14
+end
+
+
+-- level map and scripts
+level = {
     map = {
-        {7, 4, 4, 4, 4, 2, 2, 4, 2, 4, 4, 4, 11, 2, 4, 2, 4, 2, 4, 2, 4, 2, 4, 4, 6 },
+        {7, 4, 4, 4, 4, 2, 2, 4, 2, 4, 4, 4, 11, 2, 4, 2, 4, 2, 4, 2, 4, 2, 4, 4, 6 }, -- row 0
         {7, 3, 3, 3, 3, 5, 3, 5, 3, 3, 3, 5, 12, 5, 3, 3, 3, 3, 3, 5, 5, 3, 3, 3, 6 },
         {7, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 6 },
         {7, 1, 1, 1, 1, 13, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 13, 1, 1, 1, 1, 6 },
@@ -29,27 +43,27 @@ local level = {
     },
     actions = {
         {
-            location = {x = 15, y = 4},
-            target = Lvl1Script:pullLever,
+            location = {x = 20, y = 4},
+            call = Lvl1Script.pullLever,
         },
         {
             location = {x = 6, y = 4},
-            target = Lvl1Script:pullLever,
+            call = Lvl1Script.pullLever,
         },
     },
     spawn = {
         x = 13,
-        y = 2
+        y = 3
     },
     dimensions = {
-        w = 20,
-        h = 12
+        w = 25,
+        h = 18
     },
     passable = {
         {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+        {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
         {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
-        {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0 },
-        {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
+        {0, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 0 },
         {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
         {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
         {0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0 },
@@ -68,13 +82,5 @@ local level = {
     script = Lvl1Script(),
 }
 
-function Lvl1Script:pullLever(location)
-    self.levers[location] = true
-    level.map[location.x][location.y] = 14
-end
-
-function Lvl1Script:init()
-    self.levers = {}
-end
 
 return level

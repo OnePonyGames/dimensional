@@ -6,8 +6,10 @@ local totaldt = 0
 
 local msgs = {}
 
+Debug = {}
 
-function love.draw()
+
+function Debug.draw()
     local r, g, b, a = love.graphics.getColor()
     love.graphics.setColor(0, 255, 0, 255)
 
@@ -32,7 +34,7 @@ function love.draw()
     love.graphics.setColor(r, g, b, a)
 end
 
-function love.update(dt)
+function Debug.update(dt)
     totaldt = totaldt + dt
 
     if (totaldt > 1) then
@@ -72,8 +74,6 @@ function printr(t, indent, done)
         end
     end
 end
-
-Debug = {}
 
 function Debug.log(text)
     print("Logging: " .. text)

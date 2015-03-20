@@ -18,7 +18,7 @@ function Game:setLevel(level)
     self.drawer:setLevel(level)
     self.player:setTileSize(self.drawer.tileSize)
 
-    self.timeManager = TimeManager()
+    self.timeManager = TimeManager(self.level)
     self.timeManager:setPlayer(self.player, level.spawn.x, level.spawn.y)
 end
 
@@ -33,10 +33,12 @@ function Game:draw()
     self.drawer:draw()
     self.timeManager:draw()
     self.chronometer:draw()
+    Debug.draw()
 end
 
 function Game:update(dt)
     self.timeManager:update(dt)
+    Debug.update(dt)
 end
 
 function Game:keyreleased(key, code)
@@ -46,6 +48,8 @@ function Game:keyreleased(key, code)
 
             self.chronometer:setTime(0)
             self.chronometer:setVisible(true)
+        elseif(key == "e") then
+            self.timeManager:activate(self.player)
         end
     elseif(key == "return") then
         self.chronometer:setVisible(false)

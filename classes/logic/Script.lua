@@ -4,7 +4,7 @@
 local Script = Class {}
 -- Script:include(Script, Script)
 
-function Script:doorOpen()
+function Script:isDoorOpen()
     return false
 end
 

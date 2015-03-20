@@ -8,7 +8,9 @@ local TimeManager = Class {
 }
 
 
-function TimeManager:init()
+function TimeManager:init(level)
+    self.level = level
+
     self.timeLeft = 30
     self.lastAction = self.timeLeft + 1
     self.timedActions = {}
@@ -77,6 +79,8 @@ function TimeManager:resolveAction(action)
         self.entities[action.e] = nil
     elseif(action.action == TimeManager.Move) then
         action.e:moveBy(action.x, action.y)
+    elseif(action.action == TimeManager.Activate) then
+        self.level:fireAction(action.e:getLocation(), action.e:getDirection())
     end
 end
 
@@ -102,6 +106,10 @@ function TimeManager:draw()
     for i, entity in pairs(self.entities) do
         entity:draw()
     end
+end
+
+function TimeManager:activate(entity)
+    self:addAction(entity, TimeManager.Activate)
 end
 
 function TimeManager:moveUp(entity)
@@ -131,7 +139,6 @@ end
 function TimeManager:resume()
     self.running = true
 end
-
 
 function TimeManager:getTime()
     return math.floor(self.timeLeft)
