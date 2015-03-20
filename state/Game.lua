@@ -49,13 +49,15 @@ end
 
 function Game:keyreleased(key, code)
     if(self.timeManager:isRunning()) then
-        if(key == "t") then
-            self.timeManager:stop()
+        if(self.level:canUseTemporalDisplacement()) then
+            if(key == "t") then
+                self.timeManager:stop()
 
-            self.chronometer:setTime(0)
-            self.chronometer:setVisible(true)
-        elseif(key == "e") then
-            self.timeManager:activate(self.player)
+                self.chronometer:setTime(0)
+                self.chronometer:setVisible(true)
+            elseif(key == "e") then
+                self.timeManager:activate(self.player)
+            end
         end
     elseif(key == "return") then
         self.chronometer:setVisible(false)

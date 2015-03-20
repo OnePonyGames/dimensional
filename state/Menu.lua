@@ -18,7 +18,7 @@ function Menu:keyreleased(key, code)
     if key == "return" or key == "kpenter" then
         lvl = self.lvlLoader:loadLevel1()
 
-        player = Player(love.graphics.newImage("gfx/player.png"))
+        player = Player(love.graphics.newImage("assets/gfx/player.png"))
 
         self.manager:getState(State.Game):setPlayer(player)
         self.manager:getState(State.Game):setLevel(lvl)

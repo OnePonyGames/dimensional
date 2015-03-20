@@ -12,6 +12,7 @@ function LevelManager:init(level)
     self.passable = level.passable
     self.script = level.script
     self.goal = level.goal
+    self.items = level.items
 end
 
 function LevelManager:fireAction(location, direction)
@@ -20,6 +21,18 @@ function LevelManager:fireAction(location, direction)
     for i, action in ipairs(self.actions) do
         if(action.location.x == activatorLocation.x and action.location.y == activatorLocation.y) then
             action.call(activatorLocation)
+        end
+    end
+end
+
+function LevelManager:entityMoved(entity)
+    self:checkWinCondition(entity:getLocation())
+
+    for i, item in ipairs(self.items) do
+        if(item.location.x == entity.x and item.location.y == entity.y) then
+            Debug.log("You aquired a "..item.name)
+            Debug.log("remove the item!")
+            item.onpickup()
         end
     end
 end
@@ -58,6 +71,10 @@ end
 
 function LevelManager:reset()
     self.script:reset()
+end
+
+function LevelManager:canUseTemporalDisplacement()
+    return self.script:canUseTemporalDisplacement()
 end
 
 return LevelManager

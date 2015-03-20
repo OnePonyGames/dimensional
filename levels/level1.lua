@@ -15,6 +15,7 @@ local level = {}
 
 -- variables used in call functions
 local levers = {}
+local temporalDisplacement = false
 
 
 function Lvl1Script:init()
@@ -37,9 +38,26 @@ function setLever(location, state, spriteId)
     end
 end
 
+function getLeverState(location)
+    for lever, stt in pairs(levers) do
+        if(lever.x == location.x and lever.y == location.y) then
+            return stt
+        end
+    end
+    return false
+end
+
 function pullLever(location)
-    setLever(location, true, 14)
-    Timer.add(2, function() resetLever(location) end)
+    if(not getLeverState(location)) then
+        setLever(location, true, 14)
+        src1 = love.audio.newSource("assets/sfx/clock.wav", "static")
+        src1:play()
+        Timer.add(2.3, function() resetLever(location) end)
+    end
+end
+
+function pickupClock()
+    temporalDisplacement = true
 end
 
 function resetLever(location)
@@ -53,6 +71,10 @@ function Lvl1Script:isDoorOpen()
         end
     end
     return true
+end
+
+function Lvl1Script:canUseTemporalDisplacement()
+    return temporalDisplacement
 end
 
 
@@ -84,6 +106,14 @@ level = {
             location = lever2,
             call = pullLever,
         },
+    },
+    items = {
+        {
+            location = {x = 4, y = 12},
+            img = "assets/gfx/clock.png",
+            name = "Temporal Displacer",
+            onpickup = pickupClock,
+        }
     },
     spawn = {
         x = 8,

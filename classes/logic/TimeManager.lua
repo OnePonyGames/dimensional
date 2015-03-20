@@ -31,7 +31,7 @@ function TimeManager:timeShift(entity, timeOffset)
 
     self:addAction(newEntity, TimeManager.Remove)
     self.timeLeft = self.timeLeft + timeOffset
-    self.lastAction = self.timeLeft + 1
+    self.lastAction = self.timeLeft
     self:addAction(entity, TimeManager.Spawn, entity.x, entity.y)
 
     self:playFromTheBeginning()
@@ -80,7 +80,7 @@ function TimeManager:resolveAction(action)
         self.entities[action.e] = nil
     elseif(action.action == TimeManager.Move) then
         action.e:moveBy(action.x, action.y)
-        self.level:checkWinCondition(action.e:getLocation())
+        self.level:entityMoved(action.e)
     elseif(action.action == TimeManager.Activate) then
         self.level:fireAction(action.e:getLocation(), action.e:getDirection())
     end

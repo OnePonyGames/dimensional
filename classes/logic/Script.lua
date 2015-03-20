@@ -12,6 +12,10 @@ function Script:reset()
     -- do nothing
 end
 
+function Script:canUseTemporalDisplacement()
+    return true
+end
+
 
 return Script
 
