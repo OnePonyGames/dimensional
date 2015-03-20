@@ -98,6 +98,10 @@ function TimeManager:update(dt)
 
         self.lastAction = self.timeLeft
         self.timeLeft = self.timeLeft - dt
+
+        for i, entity in pairs(self.entities) do
+            entity:update(dt)
+        end
     end
 end
 

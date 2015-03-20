@@ -55,9 +55,10 @@ function Game:keyreleased(key, code)
 
                 self.chronometer:setTime(0)
                 self.chronometer:setVisible(true)
-            elseif(key == "e") then
-                self.timeManager:activate(self.player)
             end
+        end
+        if(key == "e") then
+            self.timeManager:activate(self.player)
         end
     elseif(key == "return") then
         self.chronometer:setVisible(false)
@@ -69,7 +70,7 @@ function Game:keyreleased(key, code)
 end
 
 function Game:keypressed(key, isrepeat)
-    if(self.timeManager:isRunning()) then
+    if(self.timeManager:isRunning() and self.player:isStanding()) then
         if(key == "w") then
             if(self.level:isPassable(self.player.x, self.player.y - 1)) then
                 self.timeManager:moveUp(self.player)
