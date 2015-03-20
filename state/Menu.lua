@@ -4,7 +4,7 @@ local LevelLoader = require "classes.data.LevelLoader"
 local Player = require "classes.data.Player"
 
 local Menu = Class {}
-Menu:include(State, Game)
+Menu:include(State, Menu)
 
 function Menu:init()
     self.lvlLoader = LevelLoader()

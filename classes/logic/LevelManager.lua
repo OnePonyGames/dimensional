@@ -10,6 +10,7 @@ function LevelManager:init(level)
     self.spawn = level.spawn
     self.dimensions = level.dimensions
     self.passable = level.passable
+    self.scripts = level.scripts
 end
 
 function LevelManager:isPassable(x, y)

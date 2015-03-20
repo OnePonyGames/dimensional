@@ -29,6 +29,7 @@ function TimeManager:timeShift(entity, timeOffset)
 
     self:addAction(newEntity, TimeManager.Remove)
     self.timeLeft = self.timeLeft + timeOffset
+    self.lastAction = self.timeLeft + 1
     self:addAction(entity, TimeManager.Spawn, entity.x, entity.y)
 
     self:playFromTheBeginning()
