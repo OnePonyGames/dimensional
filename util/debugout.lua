@@ -1,6 +1,6 @@
 local clicktext = ""
-local tx = love.graphics.getWidth() - 150
-local ty = love.graphics.getHeight() - 10
+local tx = 20
+local ty = 10
 
 local totaldt = 0
 

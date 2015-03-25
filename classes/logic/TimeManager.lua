@@ -1,19 +1,23 @@
 
+local Stack = require "util.Stack"
 
 
 local TimeManager = Class {
     Spawn = "spawn",
     Remove = "remove",
     Move = "move",
+    Activate = "activate",
 }
 
 
 function TimeManager:init(level)
     self.level = level
 
+    self.offset = 0
     self.timeLeft = 30
     self.lastAction = self.timeLeft + 1
-    self.timedActions = {}
+    self.timedActions = Stack:Create()
+    self.pastActions = Stack:Create()
     self.entities = {}
     self.running = true
 end
@@ -21,33 +25,32 @@ end
 function TimeManager:timeShift(entity, timeOffset)
     local newEntity = entity:clone()
 
-    for i, actions in pairs(self.timedActions) do
-        for j, action in ipairs(actions) do
-            if(action.e == entity) then
-                action.e = newEntity
-            end
+    for i, action in pairs(self.timedActions._et) do
+        if(action.e == entity) then
+            action.e = newEntity
+        end
+    end
+    for i, action in pairs(self.pastActions._et) do
+        if(action.e == entity) then
+            action.e = newEntity
         end
     end
 
     self:addAction(newEntity, TimeManager.Remove)
     self.timeLeft = self.timeLeft + timeOffset
-    self.lastAction = self.timeLeft
-    self:addAction(entity, TimeManager.Spawn, entity.x, entity.y)
-
+    self.lastAction = 999
     self:playFromTheBeginning()
+    self.lastAction = self.timeLeft + 0.1
+
+    self:addAction(entity, TimeManager.Spawn, entity.x, entity.y)
 end
 
 function TimeManager:playFromTheBeginning()
     self.level:reset()
     self.entities = {}
+    self.timedActions:push(self.pastActions:pop(self.pastActions:getn()))
 
-    for time, actions in pairs(self.timedActions) do
-        if(time >= self.timeLeft) then
-            for i, action in ipairs(actions) do
-                self:resolveAction(action)
-            end
-        end
-    end
+    self:runActions()
 end
 
 function TimeManager:addAction(entity, action, x, y, time)
@@ -55,12 +58,8 @@ function TimeManager:addAction(entity, action, x, y, time)
     y = y or 0
     time = time or self.timeLeft
 
-    if(self.timedActions[time] == nil) then
-        self.timedActions[time] = {}
-    end
-
-    local newAction = {action = action, e = entity, x = x, y = y}
-    table.insert(self.timedActions[time], newAction)
+    local newAction = {action = action, e = entity, x = x, y = y, time = time}
+    self.timedActions:push(newAction)
 
     return newAction
 end
@@ -69,6 +68,10 @@ function TimeManager:setPlayer(entity, x, y)
     self:addAction(entity, TimeManager.Spawn, x, y)
 
     entity:setLocation(x, y)
+end
+
+function TimeManager:setVisibiltyManager(vsbl)
+    self.visibility = vsbl
 end
 
 function TimeManager:resolveAction(action)
@@ -84,17 +87,26 @@ function TimeManager:resolveAction(action)
     elseif(action.action == TimeManager.Activate) then
         self.level:fireAction(action.e:getLocation(), action.e:getDirection())
     end
+
+    self.visibility:check()
+end
+
+function TimeManager:runActions()
+    if(self.timedActions:getn() > 0) then
+        local action = self.timedActions:pop()
+        while(action ~= nil and action.time >= self.timeLeft and action.time < self.lastAction) do
+            self:resolveAction(action)
+
+            self.pastActions:push(action)
+            action = self.timedActions:pop()
+        end
+        self.timedActions:push(action)
+    end
 end
 
 function TimeManager:update(dt)
     if(self:isRunning()) then
-        for time, actions in pairs(self.timedActions) do
-            if(self.timeLeft <= time and self.lastAction > time) then
-                for i, action in ipairs(actions) do
-                    self:resolveAction(action)
-                end
-            end
-        end
+        self:runActions()
 
         self.lastAction = self.timeLeft
         self.timeLeft = self.timeLeft - dt
@@ -106,12 +118,24 @@ function TimeManager:update(dt)
 end
 
 function TimeManager:draw()
-    local txt = "" .. self:getTime()
-    love.graphics.print(txt, 400, 20)
+    local txt = "" .. (self:getTime() + self.offset)
+    if(self.offset ~= 0) then
+        love.graphics.setColor(180, 50, 50)
+    end
 
+    love.graphics.setNewFont(20)
+    love.graphics.print(txt, 435, 495)
+
+    love.graphics.setColor(255, 255, 255)
     for i, entity in pairs(self.entities) do
         entity:draw()
     end
+
+    --self.visibility:draw() check Line of Sight
+end
+
+function TimeManager:getEntities()
+    return self.entities
 end
 
 function TimeManager:activate(entity)
@@ -148,6 +172,10 @@ end
 
 function TimeManager:getTime()
     return math.floor(self.timeLeft)
+end
+
+function TimeManager:setOffset(offset)
+    self.offset = offset
 end
 
 return TimeManager

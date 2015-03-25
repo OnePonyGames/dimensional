@@ -25,6 +25,9 @@ local Tiles = {
     "assets/gfx/tiles/wall_empty.png",             -- 22
     "assets/gfx/tiles/wall_stub_up_left.png",      -- 23
     "assets/gfx/tiles/wall_stub_up_right.png",     -- 24
+    "assets/gfx/tiles/door_open_top.png",          -- 25
+    "assets/gfx/tiles/door_open_bottom.png",       -- 26
+    "assets/gfx/tiles/exclamation_mark.png",       -- 27
 }
 
 

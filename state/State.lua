@@ -5,7 +5,9 @@ local State = Class {
     end,
     Menu = 1,
     Game = 2,
-    Combat = 3,
+    Won = 3,
+    LostTime = 4,
+    LostParadox = 5,
 }
 
 return State

@@ -3,6 +3,7 @@ local TileDrawer = require "classes.ui.TileDrawer"
 local Chronometer = require "classes.ui.Chronometer"
 local Timer = require "libs.hump.timer"
 
+local VisibilityManager = require "classes.logic.VisibilityManager"
 local TimeManager = require "classes.logic.TimeManager"
 
 
@@ -10,17 +11,21 @@ local Game = Class {}
 Game:include(State, Game)
 
 
-function Game:setLevel(level)
-    self.level = level
+function Game:setLevel(levelMngr)
+    self.gameEnded = false
+    self.level = levelMngr
+    self.level:setGame(self)
 
     self.drawer = TileDrawer()
     self.chronometer = Chronometer()
 
-    self.drawer:setLevel(level)
+    self.drawer:setLevel(levelMngr)
     self.player:setTileSize(self.drawer.tileSize)
 
     self.timeManager = TimeManager(self.level)
-    self.timeManager:setPlayer(self.player, level.spawn.x, level.spawn.y)
+    VisibilityManager(self, self.timeManager, self.level)
+
+    self.timeManager:setPlayer(self.player, levelMngr.spawn.x, levelMngr.spawn.y)
 end
 
 function Game:setPlayer(player)
@@ -33,23 +38,31 @@ end
 function Game:draw()
     self.drawer:draw()
     self.timeManager:draw()
-    self.chronometer:draw()
-    Debug.draw()
+    --Debug.draw()
 end
 
 function Game:update(dt)
     self.timeManager:update(dt)
+    self.drawer:update(dt)
 
     Debug.update(dt)
 
-    if(self.timeManager:isRunning()) then
+    if(self.chronometer:isVisible()) then
+        self.timeManager:setOffset(self.chronometer:getTime())
+    end
+
+    if(self.timeManager:isRunning() or self.gameEnded) then
         Timer.update(dt)
+    end
+
+    if(self.timeManager:getTime() <= 0 ) then
+        self.manager:pushState(State.LostTime)
     end
 end
 
 function Game:keyreleased(key, code)
     if(self.timeManager:isRunning()) then
-        if(self.level:canUseTemporalDisplacement()) then
+        if(self.level:canUseTemporalDisplacement() or true) then
             if(key == "t") then
                 self.timeManager:stop()
 
@@ -60,12 +73,16 @@ function Game:keyreleased(key, code)
         if(key == "e") then
             self.timeManager:activate(self.player)
         end
-    elseif(key == "return") then
+    elseif(key == "return" or key == "e") then
         self.chronometer:setVisible(false)
         local timeOffset = self.chronometer:getTime()
 
         self.timeManager:timeShift(self.player, timeOffset)
+        self.timeManager:setOffset(0)
         self.timeManager:resume()
+    end
+    if(key == "escape") then
+        love.event.quit()
     end
 end
 
@@ -93,6 +110,24 @@ function Game:keypressed(key, isrepeat)
     elseif(key == "s") then
         self.chronometer:dec()
     end
+end
+
+function Game:playerWon()
+    self.manager:pushState(State.Won)
+end
+
+function Game:displayMessage(msg)
+    self.drawer:displayMessage(msg)
+end
+
+function Game:playerLostParadox(entity1, entity2)
+    self.timeManager:stop()
+    self.gameEnded = true
+
+    self.drawer:addExclamationMark(entity1)
+    self.drawer:addExclamationMark(entity2)
+
+    Timer.add(2, function() self.manager:pushState(State.LostParadox) end)
 end
 
 return Game

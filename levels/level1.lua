@@ -36,6 +36,17 @@ function setLever(location, state, spriteId)
             level.map[location.y][location.x] = spriteId
         end
     end
+    checkDoorState()
+end
+
+function checkDoorState()
+    if(isDoorOpen()) then
+        level.map[1][8] = 25
+        level.map[2][8] = 26
+    else
+        level.map[1][8] = 11
+        level.map[2][8] = 12
+    end
 end
 
 function getLeverState(location)
@@ -64,13 +75,17 @@ function resetLever(location)
     setLever(location, false, 13)
 end
 
-function Lvl1Script:isDoorOpen()
+function isDoorOpen()
     for i, lever in pairs(levers) do
         if(lever == false) then
             return false
         end
     end
     return true
+end
+
+function Lvl1Script:isDoorOpen()
+    return isDoorOpen()
 end
 
 function Lvl1Script:canUseTemporalDisplacement()
@@ -111,7 +126,19 @@ level = {
         {
             location = {x = 4, y = 12},
             img = "assets/gfx/clock.png",
-            name = "Temporal Displacer",
+            name = "a Temporal Displacer",
+            description = "Press 'T' and use 'W' and 'S' to manipulate time.",
+            canpickup = true,
+            visible = true,
+            onpickup = pickupClock,
+        },
+        {
+            location = {x = 12, y = 12},
+            img = "assets/gfx/bomb.png",
+            name = "a Bomb",
+            description = "That doesn't look good!",
+            canpickup = false,
+            visible = true,
             onpickup = pickupClock,
         }
     },

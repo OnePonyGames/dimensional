@@ -11,7 +11,11 @@ function Menu:init()
 end
 
 function Menu:draw()
-    love.graphics.print("Press Enter to continue", 10, 10)
+    love.graphics.setNewFont( 26 )
+    love.graphics.print("Dimensional", 150, 100)
+    love.graphics.setNewFont( 12 )
+    love.graphics.print("Press Enter to continue,", 155, 150)
+    love.graphics.print("and Escape to quit", 170, 162)
 end
 
 function Menu:keyreleased(key, code)

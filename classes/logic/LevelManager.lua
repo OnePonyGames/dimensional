@@ -15,6 +15,10 @@ function LevelManager:init(level)
     self.items = level.items
 end
 
+function LevelManager:setGame(game)
+    self.game = game
+end
+
 function LevelManager:fireAction(location, direction)
     activatorLocation = self:getActivatorLocation(location, direction)
 
@@ -28,18 +32,24 @@ end
 function LevelManager:entityMoved(entity)
     self:checkWinCondition(entity:getLocation())
 
-    for i, item in ipairs(self.items) do
-        if(item.location.x == entity.x and item.location.y == entity.y) then
-            Debug.log("You aquired a "..item.name)
-            Debug.log("remove the item!")
-            item.onpickup()
+    for i = #self.items, 1, -1 do
+        item = self.items[i]
+        if(item.location.x == entity.x and item.location.y == entity.y and item.visible) then
+            self.game:displayMessage("You found: ".. item.name)
+            if(item.description ~= "") then
+                self.game:displayMessage(item.description)
+            end
+            if(item.canpickup) then
+                item.onpickup()
+                item.visible = false
+            end
         end
     end
 end
 
 function LevelManager:checkWinCondition(location)
     if(location.x == self.goal.x and location.y == self.goal.y) then
-        Debug.log("YOU WON!")
+        self.game:playerWon()
     end
 end
 
@@ -61,6 +71,9 @@ function LevelManager:getActivatorLocation(location, direction)
 end
 
 function LevelManager:isPassable(x, y)
+    if(x < 1 or y < 1) then
+        return false
+    end
     if(self.passable[y][x] == 1) then
         return true
     elseif(self.passable[y][x] == 2) then

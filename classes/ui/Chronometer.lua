@@ -4,16 +4,16 @@ local Chronometer = Class {}
 
 
 function Chronometer:init()
-    self.isVisible = false
+    self.visible = false
     self.time = 0
 end
 
 function Chronometer:setVisible(isVisible)
-    self.isVisible = isVisible
+    self.visible = isVisible
 end
 
 function Chronometer:isVisible()
-    return self.isVisible
+    return self.visible
 end
 
 function Chronometer:setTime(time)
@@ -22,13 +22,6 @@ end
 
 function Chronometer:getTime()
     return self.time
-end
-
-function Chronometer:draw()
-    if(self.isVisible) then
-        local txt = "" .. self.time
-        love.graphics.print(txt, 400, 500)
-    end
 end
 
 function Chronometer:inc()
