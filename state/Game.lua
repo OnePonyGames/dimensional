@@ -62,7 +62,7 @@ end
 
 function Game:keyreleased(key, code)
     if(self.timeManager:isRunning()) then
-        if(self.level:canUseTemporalDisplacement() or true) then
+        if(self.level:canUseTemporalDisplacement()) then
             if(key == "t") then
                 self.timeManager:stop()
 

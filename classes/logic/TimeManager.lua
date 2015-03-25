@@ -119,7 +119,7 @@ end
 
 function TimeManager:draw()
     local txt = "" .. (self:getTime() + self.offset)
-    if(self.offset ~= 0) then
+    if(not self.running) then
         love.graphics.setColor(180, 50, 50)
     end
 

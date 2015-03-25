@@ -127,7 +127,7 @@ level = {
             location = {x = 4, y = 12},
             img = "assets/gfx/clock.png",
             name = "a Temporal Displacer",
-            description = "Press 'T' and use 'W' and 'S' to manipulate time.",
+            description = "Press 'T' and use 'W' and 'S' to manipulate time, 'E' to confirm.",
             canpickup = true,
             visible = true,
             onpickup = pickupClock,
@@ -144,7 +144,8 @@ level = {
     },
     spawn = {
         x = 8,
-        y = 3
+        y = 3,
+        t = 15,
     },
     goal = {
         x = 8,
