@@ -18,10 +18,12 @@ function State:initTransition()
 end
 
 function State:transition(transitionState, color, time)
-    self.transitionState = transitionState
-    self.transitionColor = color
-    self.transitionTime = time
-    self.transitionTimeLeft = time
+    if(self.transitionState == nil) then
+        self.transitionState = transitionState
+        self.transitionColor = color
+        self.transitionTime = time
+        self.transitionTimeLeft = time
+    end
 end
 
 function State:drawTransition()
@@ -45,8 +47,6 @@ function State:updateTransition(dt)
             self:initTransition()
 
             self.manager:pushState(state)
-
-
         end
     end
 end

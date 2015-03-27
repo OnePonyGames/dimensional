@@ -57,7 +57,7 @@ function TileDrawer:update(dt)
 
         for i = #self.messages, 1, -1 do
             local msg = self.messages[i]
-            if (msg[2] == 1) then
+            if (msg[2] <= 1) then
                 table.remove(self.messages, i)
             else
                 msg[2] = msg[2] - 1

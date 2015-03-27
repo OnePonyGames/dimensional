@@ -146,6 +146,10 @@ function animation:getSize()
 	return #self.frames
 end
 
+function animation:isFinished()
+    return self:getSize() == self:getCurrentFrame()
+end
+
 --- Set the delay between frames
 -- @param frame Which frame to set the delay for
 -- @param delay The delay

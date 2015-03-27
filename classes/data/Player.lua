@@ -20,9 +20,12 @@ function Player:init(sprites)
         downWalk = newAnimation(sprites.down, 32, 64, movementSpeed, 0),
         leftWalk = newAnimation(sprites.left, 32, 64, movementSpeed, 0),
         rightWalk = newAnimation(sprites.right, 32, 64, movementSpeed, 0),
+        warpOut = newAnimation(sprites.warpOut, 32, 64, 0.15, 0),
+        warpIn = newAnimation(sprites.warpIn, 32, 64, 0.15, 0),
     }
     self.animation = self.animations.down
     self.standing = true
+    self.spawing = false
 
     for i, anim in pairs(self.animations) do
         anim:setMode("once")
@@ -66,7 +69,25 @@ function Player:draw()
         xoff = -off
     end
 
-    self.animation:draw((self.x-1) * self.tileSize - xoff, ((self.y - 2) * self.tileSize) - yoff)
+    self.animation:draw(self:getDrawX() - xoff, self:getDrawY() - yoff)
+end
+
+function Player:getDrawX()
+    return (self.x-1) * self.tileSize
+end
+
+function Player:getDrawY()
+    return ((self.y - 2) * self.tileSize)
+end
+
+function Player:warpIn()
+    self.animation = self.animations.warpIn
+    self.spawing = true
+end
+
+function Player:warpOut()
+    self.animation = self.animations.warpOut
+    self.spawing = true
 end
 
 function Player:isStanding()
@@ -97,7 +118,7 @@ end
 function Player:update(dt)
     self.animation:update(dt)
 
-    if(self.animation:getCurrentFrame() == self.animation:getSize() and not self.standing) then
+    if(self.animation:isFinished() and (not self.standing or self.spawing)) then
         if(self.direction == Direction.North) then
             self.animation = self.animations.up
         elseif(self.direction == Direction.South) then
@@ -106,6 +127,8 @@ function Player:update(dt)
             self.animation = self.animations.right
         elseif(self.direction == Direction.West) then
             self.animation = self.animations.left
+        else
+            self.animation = self.animations.down
         end
 
         self.standing = true

@@ -13,6 +13,7 @@ function LevelManager:init(level)
     self.script = level.script
     self.goal = level.goal
     self.items = level.items
+    self.bgMusic = level.bgMusic
 end
 
 function LevelManager:setGame(game)

@@ -26,6 +26,9 @@ function Game:setLevel(levelMngr)
     VisibilityManager(self, self.timeManager, self.level)
 
     self.timeManager:setPlayer(self.player, levelMngr.spawn.x, levelMngr.spawn.y)
+
+    self.music = love.audio.newSource(levelMngr.bgMusic, "static")
+    self.music:play()
 end
 
 function Game:setPlayer(player)
@@ -119,6 +122,7 @@ function Game:keypressed(key, isrepeat)
 end
 
 function Game:playerWon()
+    self:fadeOutMusic()
     self.manager:pushState(State.Won)
 end
 
@@ -130,7 +134,7 @@ function Game:playerLostParadox(entity1, entity2)
         self.drawer:addExclamationMark(entity1)
         self.drawer:addExclamationMark(entity2)
 
-        Timer.add(1, function() self:transition(State.LostParadox, {r=0, g=0, b=0}, 1.2) end)
+        Timer.add(1, function() self:fadeOutMusic() self:transition(State.LostParadox, {r=0, g=0, b=0}, 1.2) end)
     end
 end
 
@@ -138,9 +142,15 @@ function Game:playerLostTime()
     if(not self.gameEnded) then
         self.timeManager:stop()
         self.gameEnded = true
+        self:fadeOutMusic()
 
         self:transition(State.LostTime, {r=255, g=255, b=255}, 1.8)
     end
+end
+
+function Game:fadeOutMusic()
+    self.music:setVolume(0.5)
+    Timer.add(0.5, function () self.music:stop() end)
 end
 
 function Game:displayMessage(msg)

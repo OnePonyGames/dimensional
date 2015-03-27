@@ -173,6 +173,7 @@ level = {
         { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
     },
     script = Lvl1Script(),
+    bgMusic = "assets/sfx/Marty_Gots_a_Plan.mp3",
 }
 
 

@@ -32,6 +32,8 @@ function Menu:keyreleased(key, code)
             right = love.graphics.newImage("assets/gfx/player_right.png"),
             up = love.graphics.newImage("assets/gfx/player_up.png"),
             down = love.graphics.newImage("assets/gfx/player_down.png"),
+            warpIn = love.graphics.newImage("assets/gfx/warp_in.png"),
+            warpOut = love.graphics.newImage("assets/gfx/warp_out.png"),
         }
 
         player = Player(sprites)
