@@ -71,7 +71,7 @@ function TileDrawer:addExclamationMark(entity)
 end
 
 function TileDrawer:displayMessage(msg)
-    table.insert(self.messages, {msg, 4})
+    table.insert(self.messages, {msg, 7.5})
 end
 
 return TileDrawer

@@ -119,8 +119,8 @@ function Player:clone()
     newPlayer.tileSize = self.tileSize
     newPlayer.id = self.id + 1
     newPlayer.direction = self.direction
-    newPlayer.animation = self.animations
     newPlayer.standing = self.standing
+    newPlayer.animation = self.animation
 
     return newPlayer
 end

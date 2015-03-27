@@ -145,7 +145,7 @@ level = {
     spawn = {
         x = 8,
         y = 3,
-        t = 15,
+        t = 30,
     },
     goal = {
         x = 8,

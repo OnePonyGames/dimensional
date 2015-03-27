@@ -1,24 +1,46 @@
 local State = require "state.State"
-local Timer = require "libs.hump.timer"
+local SpeechBubble = require "classes.ui.SpeechBubble"
 
 local LostParadox = Class {}
 LostParadox:include(State, LostParadox)
 
 
 function LostParadox:enter()
-    Timer.add(5, function() self.manager:pushState(State.Menu) end)
+    self.deathSprite = love.graphics.newImage("assets/gfx/death.png")
+
+    self.speechUI = SpeechBubble()
+    self.speechUI:addText("SORRY, WE DON'T\nALLOW THAT KIND\nOF TIME PARADOX", 245, 155, 128, 47)
+
+    self.player.x = 7.5
+    self.player.y = 10
+    self.player:moveBy(0, -1)
 end
 
 function LostParadox:draw()
-    love.graphics.setNewFont(14)
-    love.graphics.print("Well seems like you caused a paradox...", 80, 50)
-    love.graphics.print("The Universe doesn't allow for that and deleted you...", 30, 70)
+    self.speechUI:draw()
+
+    love.graphics.setColor(255,255,255)
+    love.graphics.draw(self.deathSprite, 200, 150)
+
+    player:draw()
+
+    self:drawTransition()
 end
 
 function LostParadox:update(dt)
-    Timer.update(dt)
+    self:updateTransition(dt)
 end
 
+
+function LostParadox:setPlayer(player)
+    self.player = player
+end
+
+function LostParadox:keyreleased(key, code)
+    if(not self.speechUI:hasNext()) then
+        self:transition(State.Menu, {r=0,g=0,b=0}, 1.5)
+    end
+end
 
 
 return LostParadox

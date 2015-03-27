@@ -11,11 +11,15 @@ function Menu:init()
 end
 
 function Menu:draw()
+    love.graphics.setColor(255,255,255)
+
     love.graphics.setNewFont( 26 )
-    love.graphics.print("Dimensional", 150, 100)
+    love.graphics.print("Dimensional", 155, 100)
     love.graphics.setNewFont( 12 )
-    love.graphics.print("Press Enter to continue,", 155, 150)
-    love.graphics.print("and Escape to quit", 170, 162)
+    love.graphics.print("Press Enter to continue,", 160, 150)
+    love.graphics.print("and Escape to quit", 175, 162)
+    love.graphics.setNewFont( 11 )
+    love.graphics.print("Move with W, A, S, D and interact with E", 125, 214)
 end
 
 function Menu:keyreleased(key, code)
@@ -32,6 +36,8 @@ function Menu:keyreleased(key, code)
 
         player = Player(sprites)
 
+        self.manager:getState(State.LostParadox):setPlayer(player)
+        self.manager:getState(State.LostTime):setPlayer(player)
         self.manager:getState(State.Game):setPlayer(player)
         self.manager:getState(State.Game):setLevel(lvl)
         self.manager:pushState(State.Game)

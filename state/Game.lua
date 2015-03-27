@@ -32,20 +32,21 @@ function Game:setPlayer(player)
     self.player = player
 end
 
-function Game:enter()
-end
-
 function Game:draw()
     self.drawer:draw()
     self.timeManager:draw()
     --Debug.draw()
+
+    self:drawTransition()
 end
 
 function Game:update(dt)
+    self:updateTransition(dt)
+
     self.timeManager:update(dt)
     self.drawer:update(dt)
 
-    Debug.update(dt)
+    --Debug.update(dt)
 
     if(self.chronometer:isVisible()) then
         self.timeManager:setOffset(self.chronometer:getTime())
@@ -56,13 +57,14 @@ function Game:update(dt)
     end
 
     if(self.timeManager:getTime() <= 0 ) then
-        self.manager:pushState(State.LostTime)
+        self:playerLostTime()
     end
+
 end
 
 function Game:keyreleased(key, code)
     if(self.timeManager:isRunning()) then
-        if(self.level:canUseTemporalDisplacement()) then
+        if(self.level:canUseTemporalDisplacement() or true) then
             if(key == "t") then
                 self.timeManager:stop()
 
@@ -78,6 +80,10 @@ function Game:keyreleased(key, code)
         local timeOffset = self.chronometer:getTime()
 
         self.timeManager:timeShift(self.player, timeOffset)
+        self.timeManager:setOffset(0)
+        self.timeManager:resume()
+    elseif(key == "escape" or key == "t") then
+        self.chronometer:setVisible(false)
         self.timeManager:setOffset(0)
         self.timeManager:resume()
     end
@@ -116,18 +122,29 @@ function Game:playerWon()
     self.manager:pushState(State.Won)
 end
 
-function Game:displayMessage(msg)
-    self.drawer:displayMessage(msg)
+function Game:playerLostParadox(entity1, entity2)
+    if(not self.gameEnded) then
+        self.timeManager:stop()
+        self.gameEnded = true
+
+        self.drawer:addExclamationMark(entity1)
+        self.drawer:addExclamationMark(entity2)
+
+        Timer.add(1, function() self:transition(State.LostParadox, {r=0, g=0, b=0}, 1.2) end)
+    end
 end
 
-function Game:playerLostParadox(entity1, entity2)
-    self.timeManager:stop()
-    self.gameEnded = true
+function Game:playerLostTime()
+    if(not self.gameEnded) then
+        self.timeManager:stop()
+        self.gameEnded = true
 
-    self.drawer:addExclamationMark(entity1)
-    self.drawer:addExclamationMark(entity2)
+        self:transition(State.LostTime, {r=255, g=255, b=255}, 1.8)
+    end
+end
 
-    Timer.add(2, function() self.manager:pushState(State.LostParadox) end)
+function Game:displayMessage(msg)
+    self.drawer:displayMessage(msg)
 end
 
 return Game
