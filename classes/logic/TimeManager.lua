@@ -128,8 +128,6 @@ function TimeManager:update(dt)
             table.remove(self.animations, i)
         end
     end
-
-    Timer.update(dt)
 end
 
 function TimeManager:draw()
